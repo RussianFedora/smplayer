@@ -2,7 +2,7 @@ Name:           smplayer
 Version:        16.6.0
 %global smplayer_themes_ver 16.6.0
 %global smplayer_skins_ver 15.2.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A great media player
 
 Group:          Applications/Multimedia
@@ -16,7 +16,6 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  gcc-c++
 BuildRequires:  pkgconfig(Qt5)
 BuildRequires:  pkgconfig(Qt5Script)
-BuildRequires:  pkgconfig(Qt5Sql)
 BuildRequires:  pkgconfig(Qt5WebKitWidgets)
 BuildRequires:  pkgconfig(Qt5Designer)
 BuildRequires:  pkgconfig(zlib)
@@ -75,19 +74,22 @@ pushd smplayer-skins-%{smplayer_skins_ver}
     make install PREFIX=%{_prefix} DESTDIR=%{buildroot}
 popd
 
+%check
+desktop-file-validate %{buildroot}%{_datadir}/applications/*.desktop
+
 %post
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
-fi
-update-desktop-database &> /dev/null || :
+/usr/bin/update-desktop-database &> /dev/null || :
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun
-touch --no-create %{_datadir}/icons/hicolor
-if [ -x %{_bindir}/gtk-update-icon-cache ]; then
-  %{_bindir}/gtk-update-icon-cache --quiet %{_datadir}/icons/hicolor || :
+/usr/bin/update-desktop-database &> /dev/null || :
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
-update-desktop-database &> /dev/null || :
+
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
 %{_bindir}/%{name}
@@ -95,9 +97,13 @@ update-desktop-database &> /dev/null || :
 %{_datadir}/icons/hicolor/*/apps/%{name}.*
 %{_datadir}/%{name}
 %{_mandir}/man1/%{name}.1.gz
-%{_docdir}/%{name}/
+%{_docdir}/%{name}
 
 %changelog
+* Fri Jun 17 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.6.0-2
+- Correct post scripts
+- Validate desktop file
+
 * Wed Jun 15 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.6.0-1
 - Clean spec for Fedora
 
