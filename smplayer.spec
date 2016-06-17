@@ -1,7 +1,8 @@
+%global themes_ver 16.6.0
+%global skins_ver 15.2.0
+
 Name:           smplayer
 Version:        16.6.0
-%global smplayer_themes_ver 16.6.0
-%global smplayer_skins_ver 15.2.0
 Release:        2%{?dist}
 Summary:        A great media player
 
@@ -9,8 +10,8 @@ Group:          Applications/Multimedia
 License:        GPLv2+
 URL:            http://smplayer.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/smplayer/%{name}-%{version}.tar.bz2
-Source3:        http://downloads.sourceforge.net/smplayer/%{name}-themes-%{smplayer_themes_ver}.tar.bz2
-Source4:        http://downloads.sourceforge.net/smplayer/%{name}-skins-%{smplayer_skins_ver}.tar.bz2
+Source3:        http://downloads.sourceforge.net/smplayer/%{name}-themes-%{themes_ver}.tar.bz2
+Source4:        http://downloads.sourceforge.net/smplayer/%{name}-skins-%{skins_ver}.tar.bz2
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc-c++
@@ -36,42 +37,47 @@ and with the same settings.
 
 # correction for wrong-file-end-of-line-encoding
 %{__sed} -i 's/\r//' *.txt
-# fix files which are not UTF-8 
-iconv -f Latin1 -t UTF-8 -o Changelog.utf8 Changelog
-mv Changelog.utf8 Changelog
+
+sed -i 's/.*install.*DOC_PATH.*//g' Makefile
+sed -i 's/.*tar.*DOC_PATH.*//g' Makefile
+sed -i "s|PREFIX=/usr/local|PREFIX=%{_prefix}|" Makefile
+
+sed -i "s|PREFIX=/usr/local|PREFIX=%{_prefix}|" smplayer-themes-%{themes_ver}/Makefile
+sed -i "s|PREFIX=/usr/local|PREFIX=%{_prefix}|" smplayer-skins-%{skins_ver}/Makefile
 
 # change rcc binary
-%{__sed} -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-themes-%{smplayer_themes_ver}/themes/Makefile
-%{__sed} -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-skins-%{smplayer_skins_ver}/themes/Makefile
+%{__sed} -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-themes-%{themes_ver}/themes/Makefile
+%{__sed} -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-skins-%{skins_ver}/themes/Makefile
 
 %build
-%make_build \
-    QMAKE=%{_qt5_qmake} \
-    LRELEASE=%{_bindir}/lrelease-qt5 \
-    PREFIX=%{_prefix} \
-    DOC_PATH="\\\"%{_docdir}/%{name}/\\\"" \
-    QMAKE_OPTS=DEFINES+=NO_DEBUG_ON_CONSOLE
+pushd src
+    %{qmake_qt5}
+    %make_build \
+        DATA_PATH=\\\"%{_datadir}/%{name}\\\" \
+        TRANSLATION_PATH=\\\"%{_datadir}/%{name}/translations\\\" \
+        DOC_PATH=\\\"%{_docdir}/%{name}\\\" \
+        THEMES_PATH=\\\"%{_datadir}/%{name}/themes\\\" \
+        SHORTCUTS_PATH=\\\"%{_datadir}/%{name}/shortcuts\\\"
+    %{_bindir}/lrelease-qt5 %{name}.pro
+popd
 
-#touch src/smplayer
-#touch src/translations/smplayer_es.qm
-
-pushd smplayer-themes-%{smplayer_themes_ver}
+pushd smplayer-themes-%{themes_ver}
     %make_build
 popd
 
-pushd smplayer-skins-%{smplayer_skins_ver}
+pushd smplayer-skins-%{skins_ver}
     %make_build
 popd
 
 %install
-make PREFIX=%{_prefix} DESTDIR=%{buildroot}/ DOC_PATH=%{_docdir}/%{name}/ install
+%make_install
 
-pushd smplayer-themes-%{smplayer_themes_ver}
-    make install PREFIX=%{_prefix} DESTDIR=%{buildroot}
+pushd smplayer-themes-%{themes_ver}
+    %make_install
 popd
 
-pushd smplayer-skins-%{smplayer_skins_ver}
-    make install PREFIX=%{_prefix} DESTDIR=%{buildroot}
+pushd smplayer-skins-%{skins_ver}
+    %make_install
 popd
 
 %check
@@ -92,17 +98,20 @@ fi
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
+%doc Changelog Finding_subtitles.txt Not_so_obvious_things.txt Notes_about_mpv.txt Readme.txt
+%doc Release_notes.txt Watching_TV.txt
+%license Copying.txt
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}*.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.*
 %{_datadir}/%{name}
 %{_mandir}/man1/%{name}.1.gz
-%{_docdir}/%{name}
 
 %changelog
 * Fri Jun 17 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.6.0-2
 - Correct post scripts
 - Validate desktop file
+- Use correct build flags
 
 * Wed Jun 15 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.6.0-1
 - Clean spec for Fedora
