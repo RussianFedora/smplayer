@@ -36,7 +36,7 @@ and with the same settings.
 %setup -a3 -a4 -q
 
 # correction for wrong-file-end-of-line-encoding
-%{__sed} -i 's/\r//' *.txt
+sed -i 's/\r//' *.txt
 
 sed -i 's/.*install.*DOC_PATH.*//g' Makefile
 sed -i 's/.*tar.*DOC_PATH.*//g' Makefile
@@ -46,8 +46,8 @@ sed -i "s|PREFIX=/usr/local|PREFIX=%{_prefix}|" smplayer-themes-%{themes_ver}/Ma
 sed -i "s|PREFIX=/usr/local|PREFIX=%{_prefix}|" smplayer-skins-%{skins_ver}/Makefile
 
 # change rcc binary
-%{__sed} -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-themes-%{themes_ver}/themes/Makefile
-%{__sed} -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-skins-%{skins_ver}/themes/Makefile
+sed -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-themes-%{themes_ver}/themes/Makefile
+sed -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-skins-%{skins_ver}/themes/Makefile
 
 %build
 pushd src
