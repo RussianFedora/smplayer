@@ -22,6 +22,7 @@ BuildRequires:  pkgconfig(Qt5Designer)
 BuildRequires:  pkgconfig(zlib)
 
 Requires:       mpv
+Requires:       hicolor-icon-theme
 
 %description
 SMPlayer is a graphical user interface (GUI) for the award-winning mplayer
