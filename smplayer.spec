@@ -3,7 +3,7 @@
 
 Name:           smplayer
 Version:        16.7.0
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        A great media player
 
 Group:          Applications/Multimedia
@@ -13,8 +13,6 @@ Source0:        http://downloads.sourceforge.net/smplayer/%{name}-%{version}.tar
 Source3:        http://downloads.sourceforge.net/smplayer/%{name}-themes-%{themes_ver}.tar.bz2
 Source4:        http://downloads.sourceforge.net/smplayer/%{name}-skins-%{skins_ver}.tar.bz2
 Patch0:         smplayer-16.7.0-removeqt43code.patch
-
-Epoch:          1
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc-c++
@@ -113,8 +111,7 @@ fi
 %{_mandir}/man1/%{name}.1.gz
 
 %changelog
-* Tue Aug 02 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.7.0-2
-- Bump epoch
+* Tue Aug 02 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.7.0-4
 - Add patch from rpmfusion to fix build in rawhide
 
 * Mon Jul 11 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.7.0-1
