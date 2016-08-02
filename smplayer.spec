@@ -12,6 +12,7 @@ URL:            http://smplayer.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/smplayer/%{name}-%{version}.tar.bz2
 Source3:        http://downloads.sourceforge.net/smplayer/%{name}-themes-%{themes_ver}.tar.bz2
 Source4:        http://downloads.sourceforge.net/smplayer/%{name}-skins-%{skins_ver}.tar.bz2
+Patch0:         smplayer-16.7.0-removeqt43code.patch
 
 Epoch:          1
 
@@ -37,6 +38,7 @@ and with the same settings.
 
 %prep
 %setup -a3 -a4 -q
+%patch0 -p1 -b .qt43
 
 # correction for wrong-file-end-of-line-encoding
 sed -i 's/\r//' *.txt
@@ -113,6 +115,7 @@ fi
 %changelog
 * Tue Aug 02 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.7.0-2
 - Bump epoch
+- Add patch from rpmfusion to fix build in rawhide
 
 * Mon Jul 11 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.7.0-1
 - Update to 16.7.0
