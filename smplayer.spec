@@ -3,7 +3,7 @@
 
 Name:           smplayer
 Version:        16.7.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A great media player
 
 Group:          Applications/Multimedia
@@ -12,6 +12,8 @@ URL:            http://smplayer.sourceforge.net/
 Source0:        http://downloads.sourceforge.net/smplayer/%{name}-%{version}.tar.bz2
 Source3:        http://downloads.sourceforge.net/smplayer/%{name}-themes-%{themes_ver}.tar.bz2
 Source4:        http://downloads.sourceforge.net/smplayer/%{name}-skins-%{skins_ver}.tar.bz2
+
+Epoch:          1
 
 BuildRequires:  desktop-file-utils
 BuildRequires:  gcc-c++
@@ -109,6 +111,9 @@ fi
 %{_mandir}/man1/%{name}.1.gz
 
 %changelog
+* Tue Aug 02 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.7.0-2
+- Bump epoch
+
 * Mon Jul 11 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.7.0-1
 - Update to 16.7.0
 
