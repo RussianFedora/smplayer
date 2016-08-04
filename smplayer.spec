@@ -2,8 +2,8 @@
 %global skins_ver 15.2.0
 
 Name:           smplayer
-Version:        16.7.0
-Release:        4%{?dist}
+Version:        16.8.0
+Release:        1%{?dist}
 Summary:        A great media player
 
 Group:          Applications/Multimedia
@@ -51,7 +51,7 @@ sed -i "s|PREFIX=/usr/local|PREFIX=%{_prefix}|" smplayer-skins-%{skins_ver}/Make
 # change rcc binary
 sed -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-themes-%{themes_ver}/themes/Makefile
 sed -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-skins-%{skins_ver}/themes/Makefile
-
+asdfdf
 %build
 pushd src
     %{qmake_qt5}
@@ -111,6 +111,9 @@ fi
 %{_mandir}/man1/%{name}.1.gz
 
 %changelog
+* Thu Aug 04 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.8.0-1
+- Update to 16.8.0
+
 * Tue Aug 02 2016 Vasiliy N. Glazov <vascom2@gmail.com> - 16.7.0-4
 - Add patch from rpmfusion to fix build in rawhide
 
