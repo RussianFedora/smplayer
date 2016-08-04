@@ -51,7 +51,7 @@ sed -i "s|PREFIX=/usr/local|PREFIX=%{_prefix}|" smplayer-skins-%{skins_ver}/Make
 # change rcc binary
 sed -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-themes-%{themes_ver}/themes/Makefile
 sed -e 's/rcc -binary/rcc-qt5 -binary/' -i smplayer-skins-%{skins_ver}/themes/Makefile
-asdfdf
+
 %build
 pushd src
     %{qmake_qt5}
